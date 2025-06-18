@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4111de86e32dda443a1ed9573607b021, type: 3}
+  m_Name: WaveData
+  m_EditorClassIdentifier: 
+  waveInfos:
+  - enemies:
+    - enemyData: {fileID: 11400000, guid: a9f62b9c386da4c45809a3ec3683bd1d, type: 2}
+      count: 2
+      startTime: 0
+      spawnInterval: 1
+    - enemyData: {fileID: 11400000, guid: c95208b54c9eba44485c0df120750603, type: 2}
+      count: 4
+      startTime: 0.5
+      spawnInterval: 1
+  - enemies:
+    - enemyData: {fileID: 11400000, guid: c95208b54c9eba44485c0df120750603, type: 2}
+      count: 10
+      startTime: 0
+      spawnInterval: 0.3
+  - enemies:
+    - enemyData: {fileID: 11400000, guid: a9f62b9c386da4c45809a3ec3683bd1d, type: 2}
+      count: 6
+      startTime: 0
+      spawnInterval: 1
+  preparationDuration: 5

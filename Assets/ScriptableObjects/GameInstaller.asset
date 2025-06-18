@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19078d29419875b42aa3336e66438b05, type: 3}
+  m_Name: GameInstaller
+  m_EditorClassIdentifier: 
+  towerDataList:
+  - {fileID: 11400000, guid: ebaf087bc19e58d42abef1225500b4fe, type: 2}
+  - {fileID: 11400000, guid: c0acaf6e2b449474988e980ec573de53, type: 2}
+  healthBarPrefab: {fileID: 1621571654474772266, guid: a610577e6746c3b40862051cf39ca764, type: 3}
+  projectilePrefab: {fileID: 7869996825466711970, guid: 3c139feeeeb80d44cb341b8b3fb95ec1, type: 3}
+  waveData: {fileID: 11400000, guid: 2c2214b5bd1a9e44e9abff03c5253b6b, type: 2}

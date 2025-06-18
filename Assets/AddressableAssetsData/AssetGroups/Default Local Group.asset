@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: e8c173b79b8d0b34f96ebe281e7555de
+  m_SerializeEntries:
+  - m_GUID: 512ee7f9d3a114645ab03b0cb01d3c85
+    m_Address: Tower01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c88150da4dd7e8743a5822372d61e511
+    m_Address: Tower02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a4652e3304abf4b42ab3457288caae2e
+    m_Address: EnemyAttack
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Enemy
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eadfb46222af44e4791a0722b9500c11
+    m_Address: EnemyRunner
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Enemy
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 399ad14fe7eadcc48a40d4ab8335d93c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 96a70c9f615bf0a47a70a27a06e2175a, type: 2}
+    - {fileID: 11400000, guid: 9ead483b1bcdde5458185a5399963f0a, type: 2}
