@@ -9,14 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9cc3527838fb6b4b8f7cf3767e6c9a6, type: 3}
-  m_Name: NewAttackEnemyData
+  m_Script: {fileID: 11500000, guid: 60026ecb489a5d74aa2c06cfac29103d, type: 3}
+  m_Name: RunnerEnemyData
   m_EditorClassIdentifier: 
-  type: 1
-  maxHealth: 100
-  speed: 4
-  prefabAddress: EnemyAttack
-  attackRange: 10
-  attackDamage: 1
-  attackRate: 0.1
-  projectileColor: {r: 0.14055443, g: 0, b: 1, a: 1}
+  type: 0
+  maxHealth: 60
+  speed: 8
+  prefabAddress: EnemyRunner

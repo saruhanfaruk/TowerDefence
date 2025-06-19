@@ -8,12 +8,12 @@ using Zenject;
 namespace TowerDefence.Enemies
 {
     /// <summary>
-    /// Enemy type that stops when a tower is within range and attacks it instead of continuing to the main objective.
+    /// Enemy type that attacks towers when in range instead of moving directly to the goal.
     /// </summary>
     public class AttackEnemy : EnemyBase
     {
         #region Fields
-
+        [SerializeField] private LayerMask towerLayerMask;
         private AttackEnemyData attackData;
         private float lastAttackTime;
         private TowerBase currentTarget;
@@ -25,7 +25,7 @@ namespace TowerDefence.Enemies
         #region Initialization
 
         /// <summary>
-        /// Initializes the enemy with data and begins movement toward the target.
+        /// Called by the spawner to initialize the enemy with data and target information.
         /// </summary>
         public override void Initialize(EnemyData data, Vector3 spawnPosition, Vector3 targetPos, Action onEnemyRemoved)
         {
@@ -36,7 +36,7 @@ namespace TowerDefence.Enemies
 
         #endregion
 
-        #region Unity Callbacks
+        #region Unity Methods
 
         protected override void Update()
         {
@@ -45,35 +45,36 @@ namespace TowerDefence.Enemies
             if (currentTarget == null)
             {
                 ScanForTowers();
+                return;
             }
-            else
+
+            float distance = Vector3.Distance(transform.position, currentTarget.transform.position);
+            if (distance <= attackData.attackRange)
             {
-                float distance = Vector3.Distance(transform.position, currentTarget.transform.position);
-                if (distance <= attackData.attackRange)
-                {
-                    agent.isStopped = true;
-                    canAgentDestination = false;
-                    Attack();
-                }
+                StopMovement();
+                Attack();
             }
         }
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.green;
+            if (attackData == null)
+                return;
+            Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, attackData.attackRange);
         }
 
         #endregion
 
-        #region Targeting & Attacking
+        #region Targeting and Attacking
 
         /// <summary>
-        /// Scans for nearby towers within attack range using OverlapSphere.
+        /// Looks for nearby towers using OverlapSphere.
         /// </summary>
         private void ScanForTowers()
         {
-            Collider[] hits = Physics.OverlapSphere(transform.position, attackData.attackRange);
+            Collider[] hits = Physics.OverlapSphere(transform.position, attackData.attackRange, towerLayerMask);
+
             foreach (var hit in hits)
             {
                 if (hit.TryGetComponent(out TowerBase tower))
@@ -85,46 +86,65 @@ namespace TowerDefence.Enemies
         }
 
         /// <summary>
-        /// Attacks the currently targeted tower using projectiles.
+        /// Sends a projectile to the current target if attack cooldown allows it.
         /// </summary>
         private void Attack()
         {
-            if (Time.time - lastAttackTime >= attackData.attackRate)
+            if (Time.time - lastAttackTime < attackData.attackRate) return;
+
+            if (currentTarget == null || currentTarget.IsDead)
             {
-                if (currentTarget == null || currentTarget.IsDead)
-                {
-                    currentTarget = null;
-                    agent.isStopped = false;
-                    return;
-                }
-
-                currentTarget.RegisterAttacker(this);
-
-                var projectile = projectilePool.Get();
-                projectile.Initialize(transform.position);
-                projectile.GoToTarget(
-                    projectilePool,
-                    () => currentTarget.TakeDamage(attackData.attackDamage),
-                    () => CallBackHit(),
-                    currentTarget.hitPoint,
-                    attackData.projectileColor
-                );
-
-                lastAttackTime = Time.time;
+                ResumeMovement();
+                currentTarget = null;
+                return;
             }
+
+            currentTarget.RegisterAttacker(this);
+
+            var projectile = projectilePool.Get();
+            projectile.Initialize(transform.position);
+            projectile.GoToTarget(
+                projectilePool,
+                () => currentTarget.TakeDamage(attackData.attackDamage),
+                OnProjectileHit,
+                currentTarget.hitPoint,
+                attackData.projectileColor
+            );
+
+            lastAttackTime = Time.time;
         }
 
         /// <summary>
-        /// Callback invoked after the projectile hits the target. Resumes movement.
+        /// Called when the projectile completes its path.
         /// </summary>
-        private void CallBackHit()
+        private void OnProjectileHit()
         {
-            if (this == null) return;
+            if (this == null || gameObject == null || !this.isActiveAndEnabled)
+                return;
 
-            if (agent.isActiveAndEnabled && agent.isOnNavMesh)
+            ResumeMovement();
+        }
+
+        #endregion
+
+        #region Movement Control
+
+        private void StopMovement()
+        {
+            if (agent.isActiveAndEnabled)
             {
-                agent.isStopped = false;
+                agent.isStopped = true;
+                canAgentDestination = false;
             }
+        }
+
+        private void ResumeMovement()
+        {
+            if (agent == null || !agent.isActiveAndEnabled || !agent.isOnNavMesh)
+                return;
+
+            agent.isStopped = false;
+            canAgentDestination = true;
         }
 
         #endregion

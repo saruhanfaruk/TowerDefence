@@ -14,13 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waveInfos:
   - enemies:
-    - enemyData: {fileID: 11400000, guid: a9f62b9c386da4c45809a3ec3683bd1d, type: 2}
-      count: 2
+    - enemyData: {fileID: 11400000, guid: e10a6d662214388499b29a5da4a6f62a, type: 2}
+      count: 1
       startTime: 0
       spawnInterval: 1
     - enemyData: {fileID: 11400000, guid: c95208b54c9eba44485c0df120750603, type: 2}
       count: 4
       startTime: 0.5
+      spawnInterval: 1
+    - enemyData: {fileID: 11400000, guid: a9f62b9c386da4c45809a3ec3683bd1d, type: 2}
+      count: 1
+      startTime: 2.5
       spawnInterval: 1
   - enemies:
     - enemyData: {fileID: 11400000, guid: c95208b54c9eba44485c0df120750603, type: 2}
@@ -30,6 +34,10 @@ MonoBehaviour:
   - enemies:
     - enemyData: {fileID: 11400000, guid: a9f62b9c386da4c45809a3ec3683bd1d, type: 2}
       count: 6
+      startTime: 0
+      spawnInterval: 1
+    - enemyData: {fileID: 11400000, guid: e10a6d662214388499b29a5da4a6f62a, type: 2}
+      count: 2
       startTime: 0
       spawnInterval: 1
   preparationDuration: 5

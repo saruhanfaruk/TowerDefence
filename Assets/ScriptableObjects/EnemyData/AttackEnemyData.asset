@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e690d93ac291ea41b2cdfa2c04e740f, type: 3}
-  m_Name: Tower2Data
+  m_Script: {fileID: 11500000, guid: c9cc3527838fb6b4b8f7cf3767e6c9a6, type: 3}
+  m_Name: AttackEnemyData
   m_EditorClassIdentifier: 
-  towerName: MultiTower
-  prefabAddress: Tower02
-  health: 100
-  range: 16
-  damage: 4
-  fireRate: 0.3
-  attackType: 1
-  projectileColor: {r: 0.9839349, g: 0, b: 1, a: 1}
+  type: 1
+  maxHealth: 100
+  speed: 4
+  prefabAddress: EnemyAttack
+  attackRange: 7
+  attackDamage: 1
+  attackRate: 0.5
+  projectileColor: {r: 1, g: 0, b: 0.07148647, a: 1}

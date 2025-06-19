@@ -7,76 +7,114 @@ using TowerDefence.Enemies;
 namespace TowerDefence.Core
 {
     /// <summary>
-    /// Handles enemy wave progression, preparation phases, and spawn logic.
+    /// Manages the flow of enemy waves, preparation phases, and spawning logic.
     /// </summary>
     public class WaveManager : MonoBehaviour
     {
-        private WaveData _waveData;
-        private EnemySpawner _enemySpawner;
-        private UIManager _uiManager;
-        private MapManager _mapManager;
+        #region Fields
 
-        private int _currentWaveIndex = 0;
-        private int _aliveEnemyCount = 0;
-        private bool _isRunning = false;
+        private WaveData waveData;
+        private EnemySpawner enemySpawner;
+        private UIManager uiManager;
+        private MapManager mapManager;
 
+        private int currentWaveIndex = 0;
+        private int aliveEnemyCount = 0;
+        private bool isRunning = false;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// The number of enemies currently alive in the scene.
+        /// Updates the UI automatically when changed.
+        /// </summary>
         public int AliveEnemyCount
         {
-            get => _aliveEnemyCount;
-            set
+            get => aliveEnemyCount;
+            private set
             {
-                _aliveEnemyCount = value;
-                _uiManager.UpdateEnemyCountText(_aliveEnemyCount);
+                aliveEnemyCount = value;
+                uiManager.UpdateEnemyCountText(aliveEnemyCount);
             }
         }
 
+        #endregion
+
+        #region Injection
+
         [Inject]
-        public void Construct(EnemySpawner enemySpawner, WaveData waveData, UIManager uiManager, MapManager mapManager)
+        public void Construct(EnemySpawner enemySpawner,WaveData waveData,UIManager uiManager,MapManager mapManager)
         {
-            _enemySpawner = enemySpawner;
-            _waveData = waveData;
-            _uiManager = uiManager;
-            _mapManager = mapManager;
+            this.enemySpawner = enemySpawner;
+            this.waveData = waveData;
+            this.uiManager = uiManager;
+            this.mapManager = mapManager;
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Starts the wave flow if not already running.
+        /// </summary>
         public void StartWaves()
         {
-            if (_isRunning) return;
-            _isRunning = true;
+            if (isRunning) return;
+
+            isRunning = true;
             StartCoroutine(RunWaves());
         }
 
+        /// <summary>
+        /// Callback used by enemies to notify death.
+        /// </summary>
+        public void HandleEnemyDeath()
+        {
+            AliveEnemyCount--;
+        }
+
+        #endregion
+
+        #region Coroutines
+
         private IEnumerator RunWaves()
         {
-            while (_currentWaveIndex < _waveData.WaveInfos.Count)
+            while (currentWaveIndex < waveData.WaveInfos.Count)
             {
-                // Build phase
-                _mapManager.SetTowerPlacementStatus(true);
-                _uiManager.ShowBuildPhaseTimeRemaining(_waveData.PreparationDuration);
-                _uiManager.UpdateEnemyCountText(0);
-                _uiManager.UpdateWavesRemainingText(_waveData.WaveInfos.Count - _currentWaveIndex - 1);
+                yield return StartCoroutine(HandlePreparationPhase());
 
-                yield return new WaitForSeconds(_waveData.PreparationDuration);
-
-                _mapManager.SetTowerPlacementStatus(false);
-
-                // Run current wave
-                var waveInfo = _waveData.WaveInfos[_currentWaveIndex];
+                var waveInfo = waveData.WaveInfos[currentWaveIndex];
                 yield return StartCoroutine(RunWave(waveInfo));
 
-                // Wait for enemies to die
-                yield return new WaitUntil(() => _aliveEnemyCount <= 0);
+                yield return new WaitUntil(() => AliveEnemyCount <= 0);
 
-                _currentWaveIndex++;
+                currentWaveIndex++;
             }
 
-            Debug.Log("All waves completed."); 
+            Debug.Log("All waves completed.");
+        }
+
+        private IEnumerator HandlePreparationPhase()
+        {
+            mapManager.SetTowerPlacementStatus(true);
+            uiManager.ShowBuildPhaseTimeRemaining(waveData.PreparationDuration);
+            uiManager.UpdateEnemyCountText(0);
+            uiManager.UpdateWavesRemainingText(waveData.WaveInfos.Count - currentWaveIndex - 1);
+
+            yield return new WaitForSeconds(waveData.PreparationDuration);
+
+            mapManager.SetTowerPlacementStatus(false);
         }
 
         private IEnumerator RunWave(WaveData.WaveInfo waveInfo)
         {
             foreach (var spawnInfo in waveInfo.enemies)
+            {
                 StartCoroutine(SpawnEnemyGroup(spawnInfo));
+            }
 
             yield return null;
         }
@@ -87,15 +125,13 @@ namespace TowerDefence.Core
 
             for (int i = 0; i < spawnInfo.count; i++)
             {
-                _enemySpawner.Spawn(spawnInfo.enemyData, HandleEnemyDeath);
+                enemySpawner.Spawn(spawnInfo.enemyData, HandleEnemyDeath);
                 AliveEnemyCount++;
+
                 yield return new WaitForSeconds(spawnInfo.spawnInterval);
             }
         }
 
-        public void HandleEnemyDeath()
-        {
-            AliveEnemyCount--;
-        }
+        #endregion
     }
 }
